@@ -110,10 +110,6 @@ public class Player extends Entity{
 
     public void draw(Graphics2D g) {
         switch(action) {
-            /*case 0:
-                if(attacking) {SetSprite(Assets.attackLeft[attackCounter/5]);}
-                if(!attacking) {SetSprite(Assets.playerDown[0]);}
-                break;*/
             case 1: // up
                 if(!attacking) {SetSprite(Assets.playerUp[counter/5]);}
                 if(attacking) {SetSprite(Assets.attackLeft[attackCounter/5]);}
@@ -142,7 +138,7 @@ public class Player extends Entity{
 
     public void playerAttack() {
         attackCounter++;
-        if(attackCounter/5>=2) {
+        if(attackCounter/5>=1) {
 
             // SAVE THE CURRENT DATA
             int currentWorldX = worldX;
@@ -235,6 +231,7 @@ public class Player extends Entity{
     public void handleInterractMonster(int idx) {
         if ( idx != 999) {
             if(!invincible) {
+                game.playSE(2);
                 invincible = true;
             }
         }
@@ -243,8 +240,10 @@ public class Player extends Entity{
     public void damageMonster(int idx) {
         if(idx!=999) {
             if(!game.monster[idx].invincible) {
-                game.monster[idx].health -= 1;
+                game.playSE(3);
+                game.monster[idx].health -= 2;
                 game.monster[idx].invincible=true;
+                game.monster[idx].damageReaction();
                 if(game.monster[idx].health <= 0) {
                     game.monster[idx].dying = true;
                 }

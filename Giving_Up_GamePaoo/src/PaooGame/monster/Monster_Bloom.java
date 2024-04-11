@@ -28,8 +28,8 @@ public class Monster_Bloom extends Entity {
         barrierInitialY = barrier.y;
         img = Assets.monster_1[0];
 
-        alive = true;
-        dying = false;
+        //alive = true;
+        //dying = false;
     }
 
     public void update() {
@@ -43,6 +43,7 @@ public class Monster_Bloom extends Entity {
 
         if (attackPlayer) {
             if(!Game.getPlayer().invincible) {
+                game.playSE(2);
                 Game.getPlayer().invincible = true;
             }
         }
@@ -85,6 +86,8 @@ public class Monster_Bloom extends Entity {
         }
 
         if (invincible) {
+            hpBarOn = true;
+            hpBarCounter=0;
             invincibleCounter++;
             if ( invincibleCounter > 30) {
                 invincible=false;
@@ -122,5 +125,10 @@ public class Monster_Bloom extends Entity {
     @Override
     public int getSpeed() {
         return speed;
+    }
+
+    public void damageReaction() {
+        actionLockCounter=0;
+        action = Game.getPlayer().getAction();
     }
 }

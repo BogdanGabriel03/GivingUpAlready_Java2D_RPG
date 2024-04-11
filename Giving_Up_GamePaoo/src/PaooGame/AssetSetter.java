@@ -47,5 +47,9 @@ public class AssetSetter {
         game.monster[4] = new Monster_Bloom(game);
         game.monster[4].worldX = 20 * Tile.TILE_SIZE;
         game.monster[4].worldY = 9 * Tile.TILE_SIZE;
+
+        game.monster[5] = new Monster_Bloom(game);
+        game.monster[5].worldX = 24 * Tile.TILE_SIZE;
+        game.monster[5].worldY = 49 * Tile.TILE_SIZE;
     }
 }

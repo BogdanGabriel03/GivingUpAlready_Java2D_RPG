@@ -25,6 +25,7 @@ public class Game implements Runnable
     public TileManager tileMan;
     private KeyHandler keyH;
     public CollisionChecker collissionChecker  = new CollisionChecker(this);
+    public int l=0;
 
     // ENTITIES
     public Entity[] items = new Entity[5];
@@ -64,7 +65,7 @@ public class Game implements Runnable
     public Game(String title)
     {
         wnd = new GameWindow(title, WND_WIDTH, WND_HEIGHT);
-        keyH = new KeyHandler();
+        keyH = new KeyHandler(this);
         runState = false;
     }
 
@@ -178,10 +179,11 @@ public class Game implements Runnable
             p.update();
             for ( int i=0; i<monster.length; ++i) {
                 if(monster[i]!=null) {
+                    //System.out.println(monster[i].toString() + " -- " + i + ": alive = " +  monster[i].alive + "; dying = " + monster[i].dying);
                     if(monster[i].alive && !monster[i].dying) {
                         monster[i].update();
                     }
-                    else {
+                    else if(!monster[i].alive){
                         monster[i] = null;
                     }
                 }

@@ -10,10 +10,14 @@ public class KeyHandler implements KeyListener {
     // 3 - down
     // 4 - right
     private int action;
+    private Game game;
     private boolean checkDrawTime=false;
     private boolean enterDialogue = false;
     private boolean attacking = false;
 
+    KeyHandler(Game game) {
+        this.game = game;
+    }
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -67,10 +71,9 @@ public class KeyHandler implements KeyListener {
                     enterDialogue=true;
                     break;
                 case KeyEvent.VK_SPACE:
+                    game.playSE(4);
                     attacking = true;
                     break;
-                /*default:
-                    action=0;*/
             }
 
             /*if(code == KeyEvent.VK_W) {

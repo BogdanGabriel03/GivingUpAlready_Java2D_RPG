@@ -32,6 +32,8 @@ public abstract class Entity {
     public boolean dying = false;
     public boolean alive = true;
     public int dyingCounter =0;
+    public boolean hpBarOn = false;
+    public int hpBarCounter =0;
 
     public Entity(Game game) {
         this.game = game;
@@ -57,12 +59,27 @@ public abstract class Entity {
                 worldY > Game.getPlayer().getWorldY() - Game.getPlayer().getScreenY() -Tile.TILE_SIZE &&
                 worldY < Game.getPlayer().getWorldY() + Game.getPlayer().getScreenY() + Tile.TILE_SIZE)
         {
+            // MONSTER HP BAR
+            if(type==2 && hpBarOn) {
+
+                double oneScale = (double)Tile.TILE_SIZE/maxHealth;
+                double hpBarValue = oneScale * health;
+                g2.setColor(new Color(35,35,35));
+                g2.fillRect(screenX -2,screenY-12,Tile.TILE_SIZE +4 ,11);
+                g2.setColor(new Color(255,0,30));
+                g2.fillRect(screenX,screenY-10,(int)hpBarValue,7);
+
+                hpBarCounter++;
+                if(hpBarCounter > 150) {
+                    hpBarCounter=0;
+                    hpBarOn=false;
+                }
+
+            }
             if(invincible) {
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
             }
-            System.out.println(dying);
-            if(dying == true) {
-                System.out.println("He is dying");
+            if(dying) {
                 dyingAnimation(g2);
             }
             g2.drawImage(img, screenX, screenY, null);
@@ -71,22 +88,21 @@ public abstract class Entity {
     }
     public void dyingAnimation(Graphics2D g) {
         dyingCounter++;
-        System.out.println(dyingCounter);
-        if(dyingCounter/20%2 == 0) {
+        if(dyingCounter/5%2==0) {
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0f));
-            System.out.println("Invisible");
         }
-        if(dyingCounter/20%2 == 1) {
+        else if(dyingCounter/5%2==1) {
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-            System.out.println("Visible");
         }
-        if(dyingCounter > 99) {
+        if(dyingCounter > 30) {
             dying=false;
             alive=false;
+            dyingCounter=0;
             //dyingCounter=0;
         }
     };
     public void speak() {};
+    public void damageReaction() {};
     public void update() {};
     public void SetSprite(BufferedImage newImg) {this.img = newImg;}
     public void setAction() {};
