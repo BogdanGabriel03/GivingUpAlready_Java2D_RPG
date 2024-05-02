@@ -42,10 +42,8 @@ public class Monster_Bloom extends Entity {
         boolean attackPlayer = game.collissionChecker.checkPlayer(this);
 
         if (attackPlayer) {
-            if(!Game.getPlayer().invincible) {
-                game.playSE(2);
-                Game.getPlayer().invincible = true;
-            }
+            game.playSE(2);
+            Game.getPlayer().alive=false;
         }
 
         switch (action) {

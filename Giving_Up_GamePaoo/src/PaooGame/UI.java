@@ -15,7 +15,10 @@ public class UI {
     public boolean messageOn = false;
     public String message = "";
     public int messageTime = 0;
+    // index of command in the main menu screen
     public static int command = 0;
+    // index of command in the end level screen
+    public static int endLvlCommand =0;
 
     private double playTime=0;
     private DecimalFormat decimalFormat = new DecimalFormat("#0.00");
@@ -70,6 +73,9 @@ public class UI {
         }
         else if(Game.getGameState() == Game.GameState.MAIN_MENU_STATE) {
             drawMainMenuScreen();
+        }
+        else if(Game.getGameState() == Game.GameState.END_LEVEL_STATE) {
+            drawEndLevelScreen();
         }
     }
 
@@ -148,5 +154,44 @@ public class UI {
     int getCenterXCoordforString(String str) {
         int length = (int)g2.getFontMetrics().getStringBounds(str,g2).getWidth();
         return (Game.WND_WIDTH-length)/2;
+    }
+
+    void drawEndLevelScreen() {
+        // TO BE DONE; I AM EITHER MAKING THESE END_LEVEL_STATES TIME DEPENDENT, SO WHEN A TIMER ENDS THE PLAYER IS AUTOMATICALLY
+        //      INTRODUCED IN THE NEXT LEVEL SCREEN OR MAKE A BUTTON INTERFACE
+        //String text="";
+        if (!Game.getPlayer().alive) {
+            drawMessage(0,Game.WND_HEIGHT/2,"You lost!", 96F);
+        }
+        else if (Game.getPlayer().wonMessageOn) {
+            drawMessage(0,Game.WND_HEIGHT/3,"You won\nthis challenge!", 96F);
+            int x;
+            x = drawMessage(0,Game.WND_HEIGHT/3 + 200, "Continue", 40F);
+            if(endLvlCommand==0) {
+                drawMessage(x - 7*Tile.TILE_SIZE/10,Game.WND_HEIGHT/3 + 200, ">", 40F);
+            }
+            x = drawMessage(0,Game.WND_HEIGHT/3 + 280, "Save & Exit", 40F);
+            if(endLvlCommand==1) {
+                drawMessage(x - 7*Tile.TILE_SIZE/10,Game.WND_HEIGHT/3 + 280, ">", 40F);
+            }
+        }
+    }
+
+    int drawMessage(int x, int y, String text, float size) {
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD,size));
+        int x2=0;
+        for(String line : text.split("\n")) {
+            x2 = getCenterXCoordforString(line);
+            if ( x!=0) x2 = x;
+
+            g2.setColor(new Color(80,80,80));
+            g2.drawString(line,x2,y+6);
+
+            g2.setColor(Color.white);
+            g2.drawString(line,x2,y);
+
+            y+=100;
+        }
+        return x2;
     }
 }

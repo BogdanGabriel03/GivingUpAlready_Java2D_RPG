@@ -16,8 +16,6 @@ public class Tile
     public static final int TILE_SIZE  = INITIAL_TILE_SIZE / 2;                       /*!< Marimea unei dale.*/
 
     public BufferedImage img;                                    /*!< Imaginea aferenta tipului de dala.*/
-    //protected final int id;
-    private boolean collision;                                       /*!< Id-ul unic aferent tipului de dala.*/
 
     /*! \fn public Tile(BufferedImage texture, int id)
         \brief Constructorul aferent clasei.
@@ -29,14 +27,6 @@ public class Tile
     {
         img = image;
         solid=false;
-    }
-
-    /*! \fn public void Update()
-        \brief Actualizeaza proprietatile dalei.
-     */
-    public void Update()
-    {
-
     }
 
     /*! \fn public void Draw(Graphics g, int x, int y)

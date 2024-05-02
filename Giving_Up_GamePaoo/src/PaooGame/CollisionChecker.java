@@ -126,52 +126,57 @@ public class CollisionChecker {
     public int checkEntity(Entity entity, Entity[] target) {
         int index = 999;
         for(int i=0;i<target.length;++i) {
-            if(target[i]!=null) {
+            if (target[i] != null && !target[i].dying) {
 
-                // Get entity's solid area position
-                entity.barrier.x = entity.worldX + entity.barrier.x;
-                entity.barrier.y = entity.worldY + entity.barrier.y;
-                // Get the target solid Area position
-                target[i].barrier.x = target[i].worldX + target[i].barrier.x;
-                target[i].barrier.y = target[i].worldY + target[i].barrier.y;
 
-                game.g.setColor(Color.red);
-                game.g.fillRect(entity.barrier.x,entity.barrier.y,entity.barrier.width,entity.barrier.height);
+                    // Get entity's solid area position
+                    entity.barrier.x += entity.worldX;
+                    entity.barrier.y += entity.worldY;
+                    // Get the target solid Area position
+                    target[i].barrier.x += target[i].worldX;
+                    target[i].barrier.y += target[i].worldY;
 
-                switch(entity.getAction()) {
-                    case 1: //up
-                        entity.barrier.y -= entity.getSpeed();
-                        if(entity.barrier.intersects(target[i].barrier)) {
-                                entity.collisionOn=true;
-                                index=i;
-                        }
-                        break;
-                    case 2: //left
-                        entity.barrier.x -= entity.getSpeed();
-                        if(entity.barrier.intersects(target[i].barrier)) {
-                                entity.collisionOn=true;
-                                index=i;
-                        }
-                        break;
-                    case 3: //down
-                        entity.barrier.y += entity.getSpeed();
-                        if(entity.barrier.intersects(target[i].barrier)) {
-                                entity.collisionOn=true;
-                                index=i;
-                        }
-                        break;
-                    case 4: //right
-                        entity.barrier.x += entity.getSpeed();
-                        if(entity.barrier.intersects(target[i].barrier)) {
-                                entity.collisionOn=true;
-                                index=i;
-                        }
-                        break;
+                    switch (entity.getAction()) {
+                        case 1: //up
+                            entity.barrier.y -= entity.getSpeed();
+                            if (entity.barrier.intersects(target[i].barrier)) {
+                                entity.collisionOn = true;
+                                index = i;
+                            }
+                            break;
+                        case 2: //left
+                            entity.barrier.x -= entity.getSpeed();
+                            if (entity.barrier.intersects(target[i].barrier)) {
+                                entity.collisionOn = true;
+                                index = i;
+                            }
+                            break;
+                        case 3: //down
+                            entity.barrier.y += entity.getSpeed();
+                            if (entity.barrier.intersects(target[i].barrier)) {
+                                entity.collisionOn = true;
+                                index = i;
+                            }
+                            break;
+                        case 4: //right
+                            entity.barrier.x += entity.getSpeed();
+                            if (entity.barrier.intersects(target[i].barrier)) {
+                                entity.collisionOn = true;
+                                index = i;
+                            }
+                            break;
+                    }
+                if(target[i].type==1 && entity.type==0)
+                {
+                    Rectangle npcInteractArea = new Rectangle(entity.barrier.x -30,entity.barrier.y - 30,110,110);
+                    if (npcInteractArea.intersects(target[i].barrier)) {
+                        index = i;
+                    }
                 }
-                entity.barrier.x= entity.barrierInitialX;
-                entity.barrier.y=entity.barrierInitialY;
-                target[i].barrier.x=target[i].barrierInitialX;
-                target[i].barrier.y=target[i].barrierInitialY;
+                entity.barrier.x = entity.barrierInitialX;
+                entity.barrier.y = entity.barrierInitialY;
+                target[i].barrier.x = target[i].barrierInitialX;
+                target[i].barrier.y = target[i].barrierInitialY;
             }
         }
         return index;
@@ -203,7 +208,7 @@ public class CollisionChecker {
                 break;
         }
 
-        if(entity.barrier.intersects(Game.getPlayer().barrier)) {
+        if(entity.barrier.intersects(Game.getPlayer().barrier) && !entity.dying) {
             entity.collisionOn=true;
             contactPlayer = true;
 

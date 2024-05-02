@@ -75,35 +75,6 @@ public class KeyHandler implements KeyListener {
                     attacking = true;
                     break;
             }
-
-            /*if(code == KeyEvent.VK_W) {
-                    action=1;
-                }
-            }
-            if(code == KeyEvent.VK_A) {
-                action=2;
-            }
-            if(code == KeyEvent.VK_S) {
-                action=3;
-            }
-            if(code == KeyEvent.VK_D) {
-                action=4;
-            }
-            //Debug
-            if(code == KeyEvent.VK_T) {
-                checkDrawTime= !checkDrawTime;
-            }
-            // Game pause
-            if(code == KeyEvent.VK_P) {
-                checkDrawTime=false;
-                Game.setGameState(Game.GameState.PAUSE_STATE);
-            }
-            if ( code == KeyEvent.VK_ENTER) {
-                enterDialogue=true;
-            }
-            if ( code == KeyEvent.VK_SPACE) {
-                attacking = true;
-            }*/
         }
         else if ( Game.getGameState() == Game.GameState.PAUSE_STATE) {
             if(code == KeyEvent.VK_P) {
@@ -113,6 +84,22 @@ public class KeyHandler implements KeyListener {
         else if( Game.getGameState() == Game.GameState.DIALOGUE_STATE) {
             if ( code == KeyEvent.VK_ENTER) {
                 Game.setGameState(Game.GameState.PLAY_STATE);
+            }
+        }
+        else if ( Game.getGameState() == Game.GameState.END_LEVEL_STATE && Game.getPlayer().won) {
+            if(code == KeyEvent.VK_W || code == KeyEvent.VK_S) {
+                UI.endLvlCommand = (UI.endLvlCommand+1)%2;
+            }
+            if(code == KeyEvent.VK_ENTER) {
+                switch(UI.endLvlCommand) {
+                    case 0:
+                        Game.getPlayer().enteredNewLvl = true;
+                        Game.setGameState(Game.GameState.PLAY_STATE);
+                        //play music sss
+                        break;
+                    case 1:
+                        break;
+                }
             }
         }
 

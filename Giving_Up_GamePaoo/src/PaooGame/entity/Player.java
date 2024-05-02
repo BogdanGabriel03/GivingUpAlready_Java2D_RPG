@@ -15,6 +15,9 @@ public class Player extends Entity{
     private final int screenX;
     private final int screenY;
     static Player _instance = null;
+    public boolean won = false;
+    public boolean wonMessageOn = false;
+    public boolean enteredNewLvl = false;
     protected Player(Game game,KeyHandler keyH) {
         super(game);
         speed=4;
@@ -28,8 +31,9 @@ public class Player extends Entity{
         img = Assets.playerDown[0];
         screenX = (Game.WND_WIDTH- Tile.TILE_SIZE)/2;
         screenY = (Game.WND_HEIGHT- Tile.TILE_SIZE)/2;
-        worldX = 28*Tile.TILE_SIZE;
-        worldY = 49*Tile.TILE_SIZE;
+        worldX = 31*Tile.TILE_SIZE;
+        worldY = 46*Tile.TILE_SIZE;
+        type=0;
     }
     public static Player Instance(Game game,KeyHandler keyH) {
         if(_instance == null) {
@@ -39,6 +43,10 @@ public class Player extends Entity{
     }
 
     public void update() {
+        if(enteredNewLvl) {
+            setPosition();
+            enteredNewLvl=false;
+        }
         attacking = keyH.getAttackState();
         if ( attacking ) {
             playerAttack();
@@ -99,12 +107,8 @@ public class Player extends Entity{
             }
         }
 
-        if (invincible) {
-            invincibleCounter++;
-            if ( invincibleCounter > 45) {
-                invincible=false;
-                invincibleCounter=0;
-            }
+        if(!alive) {
+            Game.setGameState(Game.GameState.END_LEVEL_STATE);
         }
     }
 
@@ -176,7 +180,7 @@ public class Player extends Entity{
         if(attackCounter >= 20) {
             attackCounter = 0;
             attacking = false;
-            keyH.setAttackState(attacking);
+            keyH.setAttackState(false);
         }
     }
 
@@ -188,6 +192,24 @@ public class Player extends Entity{
     public int getAttack() {return attack;}
     public void setAttack(int change) {attack+=change; }
     public void setSpeed(int change) {speed+=change; }
+    private void setPosition() {
+        switch(game.currentLevel) {
+            case 1:
+                worldX = 31*Tile.TILE_SIZE;
+                worldY = 46*Tile.TILE_SIZE;
+                break;
+            case 2:
+                worldX = 28*Tile.TILE_SIZE;
+                worldY = 56*Tile.TILE_SIZE;
+                break;
+            case 3:
+                worldX = 31*Tile.TILE_SIZE;
+                worldY = 46*Tile.TILE_SIZE;
+                break;
+            default:
+                break;
+        }
+    }
 
     public void handleObject(int idx) {
         if(idx!=999) {
@@ -233,6 +255,8 @@ public class Player extends Entity{
             if(!invincible) {
                 game.playSE(2);
                 invincible = true;
+                //HE DEAD
+                alive = false;
             }
         }
     }

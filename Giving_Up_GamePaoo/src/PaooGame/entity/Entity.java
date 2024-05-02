@@ -95,8 +95,8 @@ public abstract class Entity {
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
         if(dyingCounter > 30) {
-            dying=false;
             alive=false;
+            //dying=false;
             dyingCounter=0;
             //dyingCounter=0;
         }
