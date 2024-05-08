@@ -23,6 +23,7 @@ public class Assets
     public static BufferedImage[] attackLeft = new BufferedImage[4];
     public static BufferedImage[] tiles = new BufferedImage[7];
     public static BufferedImage[] monster_1 = new BufferedImage[4];
+    public static BufferedImage[] monster_2 = new BufferedImage[6];
     public static BufferedImage chest;
     public static BufferedImage bossNpc;
 
@@ -82,6 +83,13 @@ public class Assets
         monster_1[1] = setup(sheet,4,3);
         monster_1[2] = setup(sheet,5,3);
         monster_1[3] = monster_1[1];
+
+        monster_2[0] = setup(sheet,6,3);
+        monster_2[1] = setup(sheet,7,3);
+        monster_2[2] = setup(sheet,8,3);
+        monster_2[3] = setup(sheet,9,3);
+        monster_2[4] = setup(sheet,0,4);
+        monster_2[5] = monster_2[3];
     }
 
     private static BufferedImage setup(SpriteSheet sheet, int x, int y) {

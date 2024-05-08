@@ -2,8 +2,6 @@ package PaooGame.Tiles;
 
 import PaooGame.Game;
 
-import java.awt.*;
-
 public class LevelMaker {
 
     private Game game;
@@ -15,19 +13,16 @@ public class LevelMaker {
         tileM.setUpMap(game.currentLevel);
     }
 
-    public void update() {
+    public Level update() {
         if(!Game.getPlayer().alive) {
             game.currentLevel=1;
-            tileM.setUpMap(game.currentLevel);
         }
         else if ( Game.getPlayer().wonMessageOn) {
             game.currentLevel++;
-            tileM.setUpMap(game.currentLevel);
         }
-        //tileM.setUpMap(game.currentLevel);
-    }
 
-    public void draw(Graphics2D g2) {
-        tileM.draw(g2);
+        if(game.currentLevel == 1 ) { return new Level_1(game.tileMan, game.assetSetter); }
+        else if ( game.currentLevel == 2) { return new Level_2(game.tileMan, game.assetSetter); }
+        else return new Level_3(game.tileMan, game.assetSetter);                                        // Of course need to implement end game after 3rd level is completed
     }
 }

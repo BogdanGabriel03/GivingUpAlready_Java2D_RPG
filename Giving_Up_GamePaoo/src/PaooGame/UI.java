@@ -157,23 +157,22 @@ public class UI {
     }
 
     void drawEndLevelScreen() {
-        // TO BE DONE; I AM EITHER MAKING THESE END_LEVEL_STATES TIME DEPENDENT, SO WHEN A TIMER ENDS THE PLAYER IS AUTOMATICALLY
-        //      INTRODUCED IN THE NEXT LEVEL SCREEN OR MAKE A BUTTON INTERFACE
-        //String text="";
         if (!Game.getPlayer().alive) {
             drawMessage(0,Game.WND_HEIGHT/2,"You lost!", 96F);
         }
         else if (Game.getPlayer().wonMessageOn) {
-            drawMessage(0,Game.WND_HEIGHT/3,"You won\nthis challenge!", 96F);
-            int x;
-            x = drawMessage(0,Game.WND_HEIGHT/3 + 200, "Continue", 40F);
-            if(endLvlCommand==0) {
-                drawMessage(x - 7*Tile.TILE_SIZE/10,Game.WND_HEIGHT/3 + 200, ">", 40F);
-            }
-            x = drawMessage(0,Game.WND_HEIGHT/3 + 280, "Save & Exit", 40F);
-            if(endLvlCommand==1) {
-                drawMessage(x - 7*Tile.TILE_SIZE/10,Game.WND_HEIGHT/3 + 280, ">", 40F);
-            }
+            drawMessage(0, Game.WND_HEIGHT / 3, "You won\nthis challenge!", 96F);
+        }
+
+        int x;
+        x = drawMessage(0,Game.WND_HEIGHT/3 + 200, "Continue", 40F);
+
+        if(endLvlCommand==0) {
+            drawMessage(x - 7*Tile.TILE_SIZE/10,Game.WND_HEIGHT/3 + 200, ">", 40F);
+        }
+        x = drawMessage(0,Game.WND_HEIGHT/3 + 280, "Save & Exit", 40F);
+        if(endLvlCommand==1) {
+            drawMessage(x - 7*Tile.TILE_SIZE/10,Game.WND_HEIGHT/3 + 280, ">", 40F);
         }
     }
 

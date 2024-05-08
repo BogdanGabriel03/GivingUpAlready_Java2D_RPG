@@ -15,6 +15,7 @@ public class Item_Chest extends Entity {
         name = "chest";
         img = Assets.chest;
         collision = true;
+        type = 3;
     }
 
     @Override

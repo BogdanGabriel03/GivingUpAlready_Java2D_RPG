@@ -57,6 +57,7 @@ public class TileManager {
                 mapGen.loadMap(64,"/maps/map2.txt");
                 break;
             case 3:
+                mapGen.loadMap(72,"/maps/map3.txt");
                 break;
             default:
                 break;

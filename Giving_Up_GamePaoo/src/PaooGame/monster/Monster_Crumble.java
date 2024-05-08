@@ -4,32 +4,29 @@ import PaooGame.Game;
 import PaooGame.Graphics.Assets;
 import PaooGame.entity.Entity;
 
-import java.awt.*;
 import java.util.Random;
 
-public class Monster_Bloom extends Entity {
+public class Monster_Crumble extends Entity {
     private int actionLockCounter;
-    public Monster_Bloom(Game game) {
+    public Monster_Crumble(Game game) {
         super(game);
-        type = 2;
-        name = "Bloom";             // Blue winged monsters, with the main body being an eye; everything they touch with it transforms into trees;
-        speed = 1;
-        maxHealth= 4;
+        type=4;                     // a field that denotes the type of the entity created; MONSTER_CRUMBLE's type is 4;
+        name = "Crumble";           // Red monster, resembling a rock with an eye; it is made out of magma so don't touch it; it rolls on the ground;
+        speed = 2;
+        maxHealth = 10;
         health = maxHealth;
-        actionLockCounter=0;        // Monster will walk a direction for 2 sec then choose other direction to go in
-        action = 1;                 // 0 - UP , 1 - LEFT, 2 - DOWN , 3 - RIGHT
+        actionLockCounter=0;
+        action = 0;                 // 0 - UP , 1 - LEFT, 2 - DOWN , 3 - RIGHT
 
-        barrier.x = 12;
-        barrier.y = 24;
-        barrier.width = 26;
-        barrier.height = 26;
+        barrier.x = 5;
+        barrier.y = 5;
+        barrier.width = 40;
+        barrier.height = 45;
 
         barrierInitialX = barrier.x;
         barrierInitialY = barrier.y;
-        img = Assets.monster_1[0];
+        img = Assets.monster_2[0];
 
-        //alive = true;
-        //dying = false;
     }
 
     public void update() {
@@ -48,10 +45,10 @@ public class Monster_Bloom extends Entity {
         }
 
         switch (action) {
-            case 1: SetSprite(Assets.monster_1[counter/5]);break;               // UP
-            case 2: SetSprite(Assets.monster_1[counter/5]);break;               // LEFT
-            case 3: SetSprite(Assets.monster_1[counter/5]);break;               // DOWN
-            case 4: SetSprite(Assets.monster_1[counter/5]);break;               // RIGHT
+            case 1: SetSprite(Assets.monster_2[counter/5]);break;               // UP
+            case 2: SetSprite(Assets.monster_2[counter/5]);break;               // LEFT
+            case 3: SetSprite(Assets.monster_2[counter/5]);break;               // DOWN
+            case 4: SetSprite(Assets.monster_2[counter/5]);break;               // RIGHT
         }
 
         if(!collisionOn) {
@@ -64,7 +61,9 @@ public class Monster_Bloom extends Entity {
         }
 
         counter++;
-        if(counter==20) {counter=0;}
+        if(counter==30) {
+            counter=0;
+        }
 
         if (invincible) {
             hpBarOn = true;
@@ -77,24 +76,33 @@ public class Monster_Bloom extends Entity {
         }
     }
 
-    @Override
     public void setAction() {
         actionLockCounter++;
-        if(actionLockCounter >= 60) {
+        if(actionLockCounter >= 75 || collisionOn) {
             Random rand = new Random();
             switch(rand.nextInt(100)/25) {
-                case 0: action = 1;break;               // UP
-                case 1: action = 2;break;               // LEFT
-                case 2: action = 3;break;               // DOWN
-                case 3: action = 4;break;               // RIGHT
+                case 0:
+                    action = 1;     //up
+                    break;
+                case 1:
+                    action = 2;     //left
+                    break;
+                case 2:
+                    action = 3;     //down
+                    break;
+                case 3:
+                    action = 4;     //right
+                    break;
             }
             actionLockCounter=0;
         }
     }
+
     @Override
     public int getAction() {
         return action;
     }
+
     @Override
     public int getSpeed() {
         return speed;
@@ -103,8 +111,8 @@ public class Monster_Bloom extends Entity {
     public void damageReaction() {
         actionLockCounter=0;
         action = Game.getPlayer().getAction();
-        if(action == 0) {
-            actionLockCounter=59;
+        if(action==0) {
+            actionLockCounter=74;
             setAction();
         }
     }

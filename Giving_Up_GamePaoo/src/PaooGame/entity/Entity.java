@@ -17,7 +17,10 @@ public abstract class Entity {
     public String name;
     public int attack;
     public BufferedImage img;
+
+    // indicates the type of entity; [0 - PLAYER], [1 - NPC], [2 - MONSTER_BLOOM], [3 - ITEM], [4 - MONSTER_CRUMBLE]
     public int type;
+
     public int action;
     public int counter;
     public String direction = "down";
@@ -60,7 +63,7 @@ public abstract class Entity {
                 worldY < Game.getPlayer().getWorldY() + Game.getPlayer().getScreenY() + Tile.TILE_SIZE)
         {
             // MONSTER HP BAR
-            if(type==2 && hpBarOn) {
+            if((type==2 || type == 4) && hpBarOn) {
 
                 double oneScale = (double)Tile.TILE_SIZE/maxHealth;
                 double hpBarValue = oneScale * health;

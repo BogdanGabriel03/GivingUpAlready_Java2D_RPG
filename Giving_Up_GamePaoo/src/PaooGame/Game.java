@@ -2,6 +2,7 @@ package PaooGame;
 
 import PaooGame.GameWindow.GameWindow;
 import PaooGame.Graphics.Assets;
+import PaooGame.Tiles.Level;
 import PaooGame.Tiles.LevelMaker;
 import PaooGame.Tiles.Tile;
 import PaooGame.Tiles.TileManager;
@@ -30,15 +31,16 @@ public class Game implements Runnable
 
     // ENTITIES
     private static Player p;
-    public Entity[] items = new Entity[5];
-    public Entity[] npc = new Entity[1];
-    public Entity[] monster = new Entity[15];
+    public ArrayList<Entity> items = new ArrayList<>();
+    public ArrayList<Entity> npc = new ArrayList<>();
+    public ArrayList<Entity> monster = new ArrayList<>();
     public ArrayList<Entity> entityList = new ArrayList<>();
     public AssetSetter assetSetter = new AssetSetter(this);
 
     // LEVEL LOGIC
-    public LevelMaker lvlMaker;
-    public int currentLevel=1;
+    private LevelMaker lvlMaker;
+    public int currentLevel=2;
+    private Level lvlInstance;
 
     // MUSIC, SOUND EFFECTS AND USER INTERFACE
     Sound music = new Sound();
@@ -94,14 +96,10 @@ public class Game implements Runnable
         Assets.Init();
         tileMan = new TileManager();
         lvlMaker = new LevelMaker(this, tileMan);
+        lvlInstance = lvlMaker.update();
         gState = GameState.MAIN_MENU_STATE;
-        assetSetter.setLevel();
     }
 
-    /*! \fn public void run()
-        \brief Functia ce va rula in thread-ul creat.
-        Aceasta functie va actualiza starea jocului si va redesena tabla de joc (va actualiza fereastra grafica)
-     */
     public void run()
     {
         // INIT GAME OBJECT
@@ -187,22 +185,21 @@ public class Game implements Runnable
             updated = false;
             p.update();
             int count=0;
-            for ( int i=0; i<monster.length; ++i) {
-                if(monster[i]!=null) {
-                    if(monster[i].alive && !monster[i].dying) {
-                        monster[i].update();
+            for ( int i=0; i<monster.size(); ++i) {
+                if(monster.get(i) !=null) {
+                    if(monster.get(i).alive && !monster.get(i).dying) {
+                        monster.get(i).update();
                         count++;
                     }
-                    else if(!monster[i].alive){
-                        monster[i] = null;
+                    else if(!monster.get(i).alive){
+                        monster.set(i, null);
                     }
                 }
             }
             if(count==0) p.won=true;
         }
         if ( gState == GameState.END_LEVEL_STATE) {
-            if(!updated) {lvlMaker.update();assetSetter.setLevel();}
-            updated = true;
+            if(!updated) {lvlInstance = lvlMaker.update();updated = true;p.won=false;}
         }
     }
 
@@ -241,19 +238,20 @@ public class Game implements Runnable
             if(ok) { drawStart = System.nanoTime();}
 
             // DRAWING TILES
-            lvlMaker.draw(g2);
-            //levelMaker.drawLevel(g2,currentLvl);
+
+            lvlInstance.draw(g2);
+            //lvlMaker.draw(g2);
 
             // ADDING ENTITIES TO THE LIST ( PLAYER, ITEMS, NPC-S, MONSTERS )
             entityList.add(p);
-            for(int i=0;i< npc.length;++i) {
-                if(npc[i] != null) entityList.add(npc[i]);
+            for (Entity value : npc) {
+                if (value != null) entityList.add(value);
             }
-            for(int i=0;i< items.length;++i) {
-                if(items[i] != null) entityList.add(items[i]);
+            for (Entity item : items) {
+                if (item != null) entityList.add(item);
             }
-            for(int i=0;i< monster.length;++i) {
-                if(monster[i] != null) entityList.add(monster[i]);
+            for (Entity value : monster) {
+                if (value != null) entityList.add(value);
             }
 
             // SORTING ENTITIES
@@ -264,8 +262,8 @@ public class Game implements Runnable
             });
 
             // DRAWING ENTITIES AND EMPTYING LIST
-            for ( int i=0;i<entityList.size();++i) {
-                entityList.get(i).draw(g2);
+            for (Entity entity : entityList) {
+                entity.draw(g2);
             }
             entityList.clear();
             // DRAWING USER INTERFACE
@@ -275,8 +273,6 @@ public class Game implements Runnable
             if(ok)
             {
                 long drawEnd = System.nanoTime();long passed = drawEnd-drawStart;
-                g2.setColor(Color.white);
-                g2.drawString("Draw Time: " + passed,20,7*Tile.TILE_SIZE);
                 System.out.println("Draw Time: " + passed);
             }
         }

@@ -86,18 +86,19 @@ public class KeyHandler implements KeyListener {
                 Game.setGameState(Game.GameState.PLAY_STATE);
             }
         }
-        else if ( Game.getGameState() == Game.GameState.END_LEVEL_STATE && Game.getPlayer().won) {
+        else if ( Game.getGameState() == Game.GameState.END_LEVEL_STATE) {
             if(code == KeyEvent.VK_W || code == KeyEvent.VK_S) {
                 UI.endLvlCommand = (UI.endLvlCommand+1)%2;
             }
             if(code == KeyEvent.VK_ENTER) {
                 switch(UI.endLvlCommand) {
-                    case 0:
+                    case 0:     // continue game ( if you lost it will restart you from level 1 )
                         Game.getPlayer().enteredNewLvl = true;
                         Game.setGameState(Game.GameState.PLAY_STATE);
+                        Game.getPlayer().alive=true;
                         //play music sss
                         break;
-                    case 1:
+                    case 1:     // save and exit
                         break;
                 }
             }
