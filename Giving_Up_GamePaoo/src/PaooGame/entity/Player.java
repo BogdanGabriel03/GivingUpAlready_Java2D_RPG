@@ -3,26 +3,33 @@ package PaooGame.entity;
 import PaooGame.Game;
 import PaooGame.Graphics.Assets;
 import PaooGame.Item.Item_Chest;
+import PaooGame.Item.Spell_Chest;
 import PaooGame.KeyHandler;
 import PaooGame.Tiles.Tile;
+import PaooGame.spells.FireSpell;
+import PaooGame.spells.StoneShield;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Player extends Entity{
     private int attackCounter =0;
-    private KeyHandler keyH;
+    public KeyHandler keyH;
     private final int screenX;
     private final int screenY;
     static Player _instance = null;
     public boolean won = false;
     public boolean wonMessageOn = false;
     public boolean enteredNewLvl = true;
+    private final boolean[] spells = new boolean[3];
+    private final Spell[] spellInstances = new Spell[3];
+    private final int INITIAL_SPEED=5;
+    private final int INITIAL_ATTACK=2;
 
     protected Player(Game game,KeyHandler keyH) {
         super(game);
-        speed=4;
-        attack=3;
+        speed=INITIAL_SPEED;
+        attack=INITIAL_ATTACK;
         this.keyH = keyH;
         attackArea.width = 32;
         attackArea.height = 32;
@@ -69,6 +76,28 @@ public class Player extends Entity{
             }
         }
 
+        int spellIdx = keyH.getCastedSpell();
+        if(spellIdx!=-1 && spells[spellIdx] && spellInstances[spellIdx].elapsedTime == 0) {
+            spellInstances[spellIdx].set(worldX,worldY,action,true,this);
+            spellInstances[spellIdx].elapsedTime=spellInstances[spellIdx].rechargeTime;
+            game.spellList.add(spellInstances[spellIdx]);
+        }
+        else if(spellIdx!=-1 && !spells[spellIdx]){
+            game.ui.showMessage("Spell not discovered yet!", 25, 6*Tile.TILE_SIZE);
+        }
+        else if(spellIdx!=-1 && spells[spellIdx] && spellInstances[spellIdx].elapsedTime !=0) {
+            game.ui.showMessage("Spell recharging!", 25, 6*Tile.TILE_SIZE);
+        }
+        else if(spellIdx!=-1){
+            game.ui.showMessage("Unknown problem!", 25, 6*Tile.TILE_SIZE);
+        }
+
+        for ( Spell s : spellInstances) {
+            if(s!=null && s.elapsedTime!=0) {
+                s.elapsedTime--;
+            }
+        }
+
         collisionOn = false;
         game.collissionChecker.checkTile(this);
 
@@ -93,7 +122,23 @@ public class Player extends Entity{
             }
         }
 
+        if (invincible) {
+            invincibleCounter++;
+            if ( invincibleCounter > 60) {
+                invincible=false;
+                invincibleCounter=0;
+            }
+        }
+
         if(!alive) {
+            for ( int i=0;i<3;++i) {
+                spells[i]=false;
+                spellInstances[i]=null;
+            }
+            invincible=false;
+            invincibleCounter=0;
+            speed = INITIAL_SPEED;
+            attack = INITIAL_ATTACK;
             Game.setGameState(Game.GameState.END_LEVEL_STATE);
         }
     }
@@ -102,7 +147,7 @@ public class Player extends Entity{
         switch(action) {
             case 1: // UP
                 if(!attacking) {SetSprite(Assets.playerUp[counter/5]);}
-                if(attacking) {SetSprite(Assets.attackLeft[attackCounter/5]);}              // need sprites for player attacking animation upward
+                if(attacking) {SetSprite(Assets.attackUp[attackCounter/5]);}
                 break;
             case 2: // LEFT
                 if(!attacking) {SetSprite(Assets.playerLeft[counter/5]);}
@@ -110,7 +155,7 @@ public class Player extends Entity{
                 break;
             case 3: // DOWN
                 if(!attacking) {SetSprite(Assets.playerDown[counter/5]);}
-                if(attacking) {SetSprite(Assets.attackRight[attackCounter/5]);}             // need sprites for player attacking animation downward
+                if(attacking) {SetSprite(Assets.attackDown[attackCounter/5]);}
                 break;
             case 4: // RIGHT
                 if(!attacking) {SetSprite(Assets.playerRight[counter/5]);}
@@ -118,6 +163,9 @@ public class Player extends Entity{
                 break;
             default:
                 break;
+        }
+        if(invincible && invincibleCounter/15%2==0) {
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
         }
         g.drawImage(this.img, screenX, screenY,null);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
@@ -145,7 +193,7 @@ public class Player extends Entity{
 
             // CHECK MONSTER COLLISION
             int monsterIdx = game.collissionChecker.checkEntity(this,game.monster);
-            damageMonster(monsterIdx);
+            damageMonster(monsterIdx,this.attack);
 
             // RESTORE DATA
             worldX = currentWorldX;
@@ -165,7 +213,7 @@ public class Player extends Entity{
         SetSprite(Assets.playerDown[0]);                                                        // Setting player start position when entering a new level and initial sprite
         switch(game.currentLevel) {
             case 1: worldX = 31*Tile.TILE_SIZE; worldY = 46*Tile.TILE_SIZE; break;              // LEVEL 1
-            case 2: worldX = 33*Tile.TILE_SIZE; worldY = 57*Tile.TILE_SIZE; break;              // LEVEL 2
+            case 2: worldX = 24*Tile.TILE_SIZE; worldY = 57*Tile.TILE_SIZE; break;              // LEVEL 2
             case 3: worldX = 9*Tile.TILE_SIZE; worldY = 63*Tile.TILE_SIZE; break;               // LEVEL 3
             default: break;
         }
@@ -175,22 +223,24 @@ public class Player extends Entity{
         if(idx!=999) {
             String itemName = game.items.get(idx).name;
             switch(itemName) {
-                case "chest":
+                case "itemChest":
                     game.playSE(1);
-                    Item_Chest chest = (Item_Chest)game.items.get(idx);
-                    switch(chest.getChestContent()) {
-                        case 0:     // ATK UP
-                            game.ui.showMessage("ATTACK UP!");
-                            setAttack(1);
-                            break;
-                        case 1:     // Speed UP
-                            game.ui.showMessage("SPEED UP!");
-                            setSpeed(1);
-                            break;
-                        case 2:
-                            break;
-                        case 3:
-                            break;
+                    Item_Chest iChest = (Item_Chest)game.items.get(idx);
+                    switch(iChest.getChestContent()) {
+                        case 0: game.ui.showMessage("ATTACK UP!",25, 4*Tile.TILE_SIZE);  setAttack(1);   break;
+                        case 1: game.ui.showMessage("SPEED UP!", 25, 4*Tile.TILE_SIZE);   setSpeed(1);    break;
+                        case 2: break;
+                        case 3: break;
+                    }
+                    game.items.remove(idx);
+                    break;
+                case "spellChest":
+                    Spell_Chest sChest = (Spell_Chest)game.items.get(idx);
+                    switch(sChest.getChestContent()) {
+                        case 0: game.ui.showMessage("NEW SPELL UNLOCKED! <FIREBALL>", 25, 4* Tile.TILE_SIZE);           spells[0]=true;spellInstances[0] = new FireSpell(game);         break;
+                        case 1: game.ui.showMessage("NEW SPELL UNLOCKED! <STONE SHIELD>", 25, 4* Tile.TILE_SIZE);       spells[1] = true;spellInstances[1] = new StoneShield(game);       break;          // to be modified
+                        case 2: game.ui.showMessage("NEW SPELL UNLOCKED! <WATER WALKING>", 25, 4* Tile.TILE_SIZE);     spells[2] = true;spellInstances[2] = new FireSpell(game);       break;          // to be modified
+                        default: break;
                     }
                     game.items.remove(idx);
                     break;
@@ -213,18 +263,19 @@ public class Player extends Entity{
 
     public void handleInterractMonster(int idx) {
         if ( idx != 999) {
-            game.playSE(2);
-            invincible = true;
             //HE DEAD
-            alive = false;
+            if(!invincible) {
+                alive = false;
+                game.playSE(2);
+            }
         }
     }
 
-    public void damageMonster(int idx) {
+    public void damageMonster(int idx, int attack) {
         if(idx!=999) {
             if(!game.monster.get(idx).invincible) {
                 game.playSE(3);
-                game.monster.get(idx).health -= 2;                          // REPLACE WITH PLAYER ATTACK EVENTUALLY
+                game.monster.get(idx).health -= attack;                          // REPLACE WITH PLAYER ATTACK EVENTUALLY
                 game.monster.get(idx).invincible=true;
                 game.monster.get(idx).damageReaction();
                 if(game.monster.get(idx).health <= 0) {
@@ -238,10 +289,12 @@ public class Player extends Entity{
     public int getScreenY() {return screenY;}
     public int getWorldX() {return worldX;}
     public int getWorldY() {return worldY;}
-    public int getAction() {return keyH.getAction();}
+    public int getAction() {return action;}
     public int getAttack() {return attack;}
     public void setAttack(int change) {attack+=change; }
     public void setSpeed(int change) {speed+=change; }
+    public boolean getSpell(int idx) {return spells[idx];}
+    public Spell getSpellInstance(int idx) {return spellInstances[idx];}
 
     @Override
     public int getSpeed() {

@@ -1,6 +1,7 @@
 package PaooGame;
 
 import PaooGame.Item.Item_Chest;
+import PaooGame.Item.Spell_Chest;
 import PaooGame.Tiles.Tile;
 import PaooGame.entity.Entity;
 import PaooGame.entity.NPC_FinalBoss;
@@ -18,22 +19,16 @@ public class AssetSetter {
         switch(game.currentLevel) {
             case 1:
                 game.items.add(createAsset(3,17,25));
-                game.items.add(createAsset(3,45,38));
+                game.items.add(createAsset(5,45,38));
                 break;
             case 2:
                 game.items.add(createAsset(3,14,9));
                 game.items.add(createAsset(3,55,37));
-                game.items.add(createAsset(3,24,35));
+                game.items.add(createAsset(5,24,35));
                 break;
             case 3:
-                /*game.items[0] = new Item_Chest(game);
-                game.items[0].worldX = 17 * Tile.TILE_SIZE;
-                game.items[0].worldY = 25 * Tile.TILE_SIZE;
-
-                game.items[1] = new Item_Chest(game);
-                game.items[1].worldX = 45 * Tile.TILE_SIZE;
-                game.items[1].worldY = 38 * Tile.TILE_SIZE;*/
-
+                game.items.add(createAsset(3,31,18));
+                game.items.add(createAsset(3,48,48));       //5
                 break;
             default: break;
         }
@@ -49,7 +44,7 @@ public class AssetSetter {
                 game.npc.add(createAsset(1,54,7));
                 break;
             case 3:
-                game.npc.add(createAsset(1,22,58));
+                game.npc.add(createAsset(1,15,28));
             default: break;
         }
     }
@@ -76,29 +71,17 @@ public class AssetSetter {
                 game.monster.add(createAsset(4,44,7));
                 break;
             case 3:
-                /*game.monster[0] = new Monster_Bloom(game);
-                game.monster[0].worldX = 29 * Tile.TILE_SIZE;
-                game.monster[0].worldY = 45 * Tile.TILE_SIZE;
+                game.monster.add(createAsset(2,22,58));
+                game.monster.add(createAsset(2,18,63));
+                game.monster.add(createAsset(4,60,57));
+                game.monster.add(createAsset(4,60,47));
+                game.monster.add(createAsset(4,30,18));
+                game.monster.add(createAsset(4,47,33));
+                game.monster.add(createAsset(4,17,24));
+                game.monster.add(createAsset(4,42,8));          //level3 type monster
+                game.monster.add(createAsset(4,20,8));          //level3 type monster
+                game.monster.add(createAsset(4,20,10));         //level3 type monster
 
-                game.monster[1] = new Monster_Bloom(game);
-                game.monster[1].worldX = 34 * Tile.TILE_SIZE;
-                game.monster[1].worldY = 56 * Tile.TILE_SIZE;
-
-                game.monster[2] = new Monster_Bloom(game);
-                game.monster[2].worldX = 28 * Tile.TILE_SIZE;
-                game.monster[2].worldY = 32 * Tile.TILE_SIZE;
-
-                game.monster[3] = new Monster_Bloom(game);
-                game.monster[3].worldX = 32 * Tile.TILE_SIZE;
-                game.monster[3].worldY = 8 * Tile.TILE_SIZE;
-
-                game.monster[4] = new Monster_Bloom(game);
-                game.monster[4].worldX = 20 * Tile.TILE_SIZE;
-                game.monster[4].worldY = 9 * Tile.TILE_SIZE;
-
-                game.monster[5] = new Monster_Bloom(game);
-                game.monster[5].worldX = 24 * Tile.TILE_SIZE;
-                game.monster[5].worldY = 49 * Tile.TILE_SIZE;*/
 
                 break;
             default: break;
@@ -116,7 +99,8 @@ public class AssetSetter {
             case 1 -> new NPC_FinalBoss(game);
             case 2 -> new Monster_Bloom(game);
             case 3 -> new Item_Chest(game);
-            default -> new Monster_Crumble(game);
+            case 4 -> new Monster_Crumble(game);
+            default -> new Spell_Chest(game);
         };
         entity.worldX = x * Tile.TILE_SIZE;
         entity.worldY = y * Tile.TILE_SIZE;

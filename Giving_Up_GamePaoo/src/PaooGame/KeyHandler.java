@@ -14,6 +14,7 @@ public class KeyHandler implements KeyListener {
     private boolean checkDrawTime=false;
     private boolean enterDialogue = false;
     private boolean attacking = false;
+    private int castedSpell = -1;
 
     KeyHandler(Game game) {
         this.game = game;
@@ -74,6 +75,12 @@ public class KeyHandler implements KeyListener {
                     game.playSE(4);
                     attacking = true;
                     break;
+                case KeyEvent.VK_J:
+                    castedSpell=0;
+                    break;
+                case KeyEvent.VK_K:
+                    castedSpell=1;
+                    break;
             }
         }
         else if ( Game.getGameState() == Game.GameState.PAUSE_STATE) {
@@ -112,6 +119,9 @@ public class KeyHandler implements KeyListener {
         if(code==KeyEvent.VK_W || code == KeyEvent.VK_A || code == KeyEvent.VK_S || code == KeyEvent.VK_D) {
             action=0;
         }
+        if(code==KeyEvent.VK_J || code==KeyEvent.VK_K) {
+            castedSpell=-1;
+        }
     }
 
     public int getAction() {
@@ -133,5 +143,11 @@ public class KeyHandler implements KeyListener {
     }
     public void setAttackState(boolean state) {
         attacking = state;
+    }
+    public void setCastedSpell(int idx) {
+        castedSpell = idx;
+    }
+    public int getCastedSpell() {
+        return castedSpell;
     }
 }

@@ -34,12 +34,14 @@ public class Game implements Runnable
     public ArrayList<Entity> items = new ArrayList<>();
     public ArrayList<Entity> npc = new ArrayList<>();
     public ArrayList<Entity> monster = new ArrayList<>();
+    public int monsterCount;
     public ArrayList<Entity> entityList = new ArrayList<>();
+    public ArrayList<Entity> spellList = new ArrayList<>();
     public AssetSetter assetSetter = new AssetSetter(this);
 
     // LEVEL LOGIC
     private LevelMaker lvlMaker;
-    public int currentLevel=2;
+    public int currentLevel=1;
     private Level lvlInstance;
 
     // MUSIC, SOUND EFFECTS AND USER INTERFACE
@@ -184,19 +186,31 @@ public class Game implements Runnable
         if(gState == GameState.PLAY_STATE) {
             updated = false;
             p.update();
-            int count=0;
+            monsterCount=0;
             for ( int i=0; i<monster.size(); ++i) {
                 if(monster.get(i) !=null) {
                     if(monster.get(i).alive && !monster.get(i).dying) {
                         monster.get(i).update();
-                        count++;
+                        monsterCount++;
                     }
                     else if(!monster.get(i).alive){
                         monster.set(i, null);
                     }
                 }
             }
-            if(count==0) p.won=true;
+
+            for ( int i=0; i<spellList.size(); ++i) {
+                if(spellList.get(i) !=null) {
+                    if(spellList.get(i).alive ) {
+                        spellList.get(i).update();
+                    }
+                    else {
+                        spellList.remove(i);
+                    }
+                }
+            }
+
+            if(monsterCount==0) p.won=true;
         }
         if ( gState == GameState.END_LEVEL_STATE) {
             if(!updated) {lvlInstance = lvlMaker.update();updated = true;p.won=false;}
@@ -251,6 +265,9 @@ public class Game implements Runnable
                 if (item != null) entityList.add(item);
             }
             for (Entity value : monster) {
+                if (value != null) entityList.add(value);
+            }
+            for (Entity value : spellList) {
                 if (value != null) entityList.add(value);
             }
 

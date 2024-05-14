@@ -40,8 +40,11 @@ public class Monster_Crumble extends Entity {
         boolean attackPlayer = game.collissionChecker.checkPlayer(this);
 
         if (attackPlayer) {
-            game.playSE(2);
-            Game.getPlayer().alive=false;
+            if(!Game.getPlayer().invincible) {
+                game.playSE(2);
+                Game.getPlayer().alive=false;
+            }
+
         }
 
         switch (action) {

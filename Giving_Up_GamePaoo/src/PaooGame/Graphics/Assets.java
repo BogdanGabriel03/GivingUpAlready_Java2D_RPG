@@ -21,11 +21,17 @@ public class Assets
     public static BufferedImage[] playerDown = new BufferedImage[4];;
     public static BufferedImage[] attackRight = new BufferedImage[4];
     public static BufferedImage[] attackLeft = new BufferedImage[4];
+    public static BufferedImage[] attackDown = new BufferedImage[4];
+    public static BufferedImage[] attackUp = new BufferedImage[4];
     public static BufferedImage[] tiles = new BufferedImage[7];
     public static BufferedImage[] monster_1 = new BufferedImage[4];
     public static BufferedImage[] monster_2 = new BufferedImage[6];
     public static BufferedImage chest;
     public static BufferedImage bossNpc;
+    public static BufferedImage[] fireSpell = new BufferedImage[5];
+    public static BufferedImage[] stoneShield = new BufferedImage[3];
+    public static BufferedImage[] crystalBeam= new BufferedImage[4];
+    public static BufferedImage[] spellButton = new BufferedImage[3];
 
 
     /*! \fn public static void Init()
@@ -90,6 +96,36 @@ public class Assets
         monster_2[3] = setup(sheet,9,3);
         monster_2[4] = setup(sheet,0,4);
         monster_2[5] = monster_2[3];
+
+        fireSpell[0] = setup(sheet,1,4);
+        fireSpell[1] = setup(sheet,2,4);
+        fireSpell[2] = setup(sheet,3,4);
+        fireSpell[3] = setup(sheet,4,4);
+        fireSpell[4] = setup(sheet,5,4);
+
+        attackDown[0] = setup(sheet,6,4);
+        attackDown[1] = setup(sheet,7,4);
+        attackDown[2] = setup(sheet,8,4);
+        attackDown[3] = setup(sheet,9,4);
+
+        attackUp[0] = setup(sheet,0,5);
+        attackUp[1] = setup(sheet,1,5);
+        attackUp[2] = setup(sheet,2,5);
+        attackUp[3] = setup(sheet,3,5);
+
+        crystalBeam[0] = setup(sheet,4,5);
+        crystalBeam[1] = setup(sheet,5,5);
+        crystalBeam[2] = setup(sheet,6,5);
+        crystalBeam[3] = setup(sheet,7,5);
+
+        spellButton[0] = setup(sheet,8,5);
+        spellButton[1] = setup(sheet,9,5);
+        spellButton[2] = setup(sheet,0,6);
+
+        stoneShield[0] = setup(sheet,1,6);
+        stoneShield[1] = setup(sheet,2,6);
+        stoneShield[2] = setup(sheet,3,6);
+
     }
 
     private static BufferedImage setup(SpriteSheet sheet, int x, int y) {

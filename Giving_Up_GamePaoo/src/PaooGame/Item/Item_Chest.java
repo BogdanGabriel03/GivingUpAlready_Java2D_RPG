@@ -12,10 +12,10 @@ public class Item_Chest extends Entity {
 
     public Item_Chest(Game game) {
         super(game);
-        name = "chest";
+        name = "itemChest";
         img = Assets.chest;
         collision = true;
-        type = 3;
+        type = 3;                        // a field that denotes the type of the entity created; ITEM_CHEST's type is 3;
     }
 
     @Override

@@ -6,9 +6,10 @@ import PaooGame.Tiles.Tile;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 public abstract class Entity {
-    public Game game;
+    protected Game game;
     public int worldX;
     public int worldY;
     public int speed;
@@ -18,7 +19,7 @@ public abstract class Entity {
     public int attack;
     public BufferedImage img;
 
-    // indicates the type of entity; [0 - PLAYER], [1 - NPC], [2 - MONSTER_BLOOM], [3 - ITEM], [4 - MONSTER_CRUMBLE]
+    // indicates the type of entity; [0 - PLAYER], [1 - NPC], [2 - MONSTER_BLOOM], [3 - ITEM_CHEST], [4 - MONSTER_CRUMBLE], [5 - SPELL_CHEST]
     public int type;
 
     public int action;
@@ -67,10 +68,13 @@ public abstract class Entity {
 
                 double oneScale = (double)Tile.TILE_SIZE/maxHealth;
                 double hpBarValue = oneScale * health;
+
                 g2.setColor(new Color(35,35,35));
                 g2.fillRect(screenX -2,screenY-12,Tile.TILE_SIZE +4 ,11);
-                g2.setColor(new Color(255,0,30));
-                g2.fillRect(screenX,screenY-10,(int)hpBarValue,7);
+                if(!dying) {
+                    g2.setColor(new Color(255,0,30));
+                    g2.fillRect(screenX,screenY-10,(int)hpBarValue,7);
+                }
 
                 hpBarCounter++;
                 if(hpBarCounter > 150) {
@@ -79,8 +83,8 @@ public abstract class Entity {
                 }
 
             }
-            if(invincible) {
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+            if(invincible || Objects.equals(name, "StoneShield")) {
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
             }
             if(dying) {
                 dyingAnimation(g2);
