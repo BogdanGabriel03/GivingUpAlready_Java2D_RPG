@@ -19,6 +19,9 @@ public class LevelMaker {
         }
         else if ( Game.getPlayer().wonMessageOn) {
             game.currentLevel++;
+            //if(game.currentLevel>3) {
+            //   game.currentLevel=1;
+            //}
         }
 
         if(game.currentLevel == 1 ) { return new Level_1(game.tileMan, game.assetSetter); }

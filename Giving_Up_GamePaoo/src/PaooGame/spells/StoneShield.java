@@ -42,8 +42,5 @@ public class StoneShield extends Spell {
                 alive=false;
             }
         }
-        else {
-            // what monster can become impervious to dmg
-        }
     }
 }

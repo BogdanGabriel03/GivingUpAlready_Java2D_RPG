@@ -26,7 +26,6 @@ public class Monster_Crumble extends Entity {
         barrierInitialX = barrier.x;
         barrierInitialY = barrier.y;
         img = Assets.monster_2[0];
-
     }
 
     public void update() {

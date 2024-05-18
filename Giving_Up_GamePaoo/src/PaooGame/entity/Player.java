@@ -23,8 +23,8 @@ public class Player extends Entity{
     public boolean enteredNewLvl = true;
     private final boolean[] spells = new boolean[3];
     private final Spell[] spellInstances = new Spell[3];
-    private final int INITIAL_SPEED=5;
-    private final int INITIAL_ATTACK=2;
+    private final int INITIAL_SPEED=6;
+    private final int INITIAL_ATTACK=15;
 
     protected Player(Game game,KeyHandler keyH) {
         super(game);
@@ -131,14 +131,7 @@ public class Player extends Entity{
         }
 
         if(!alive) {
-            for ( int i=0;i<3;++i) {
-                spells[i]=false;
-                spellInstances[i]=null;
-            }
-            invincible=false;
-            invincibleCounter=0;
-            speed = INITIAL_SPEED;
-            attack = INITIAL_ATTACK;
+            resetPlayer();
             Game.setGameState(Game.GameState.END_LEVEL_STATE);
         }
     }
@@ -212,11 +205,23 @@ public class Player extends Entity{
     private void setPosition() {
         SetSprite(Assets.playerDown[0]);                                                        // Setting player start position when entering a new level and initial sprite
         switch(game.currentLevel) {
-            case 1: worldX = 31*Tile.TILE_SIZE; worldY = 46*Tile.TILE_SIZE; break;              // LEVEL 1
-            case 2: worldX = 24*Tile.TILE_SIZE; worldY = 57*Tile.TILE_SIZE; break;              // LEVEL 2
-            case 3: worldX = 9*Tile.TILE_SIZE; worldY = 63*Tile.TILE_SIZE; break;               // LEVEL 3
+            case 1: worldX = 23*Tile.TILE_SIZE; worldY = 9*Tile.TILE_SIZE; break;              // LEVEL 1
+            case 2: worldX = 11*Tile.TILE_SIZE; worldY = 16*Tile.TILE_SIZE; break;              // LEVEL 2
+            case 3: worldX = 24*Tile.TILE_SIZE; worldY = 9*Tile.TILE_SIZE; break;               // LEVEL 3
             default: break;
         }
+    }
+
+    public void resetPlayer() {
+        // RESETTING PLAYER
+        for ( int i=0;i<3;++i) {
+            spells[i]=false;
+            spellInstances[i]=null;
+        }
+        invincible=false;
+        invincibleCounter=0;
+        speed = INITIAL_SPEED;
+        attack = INITIAL_ATTACK;
     }
 
     public void handleObject(int idx) {
@@ -294,7 +299,13 @@ public class Player extends Entity{
     public void setAttack(int change) {attack+=change; }
     public void setSpeed(int change) {speed+=change; }
     public boolean getSpell(int idx) {return spells[idx];}
+    public void setSpell(int idx,int val) {spells[idx] = (val == 1);}
     public Spell getSpellInstance(int idx) {return spellInstances[idx];}
+    public void setSpellInstance(int idx) {
+        if(idx==0) spellInstances[idx] = new FireSpell(game);
+        else if(idx==1) spellInstances[idx] = new StoneShield(game);
+        else if(idx==2) spellInstances[idx] = new FireSpell(game);
+    }
 
     @Override
     public int getSpeed() {

@@ -44,4 +44,6 @@ public class Spell extends Entity{
     }
 
     public int getElapsedTime() { return elapsedTime;}
+    public void setElapsedTime(int val) {elapsedTime=val;}
+    public int getRechargeTime() {return rechargeTime;}
 }

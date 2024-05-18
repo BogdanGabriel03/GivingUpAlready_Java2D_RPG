@@ -22,6 +22,7 @@ public class UI {
     public static int command = 0;
     // index of command in the end level screen
     public static int endLvlCommand =0;
+    public static int warningCommand = 0;
 
     private double playTime=0;
     private DecimalFormat decimalFormat = new DecimalFormat("#0.00");
@@ -93,6 +94,9 @@ public class UI {
         else if(Game.getGameState() == Game.GameState.END_LEVEL_STATE) {
             messageOn=false;
             drawEndLevelScreen();
+        }
+        else if(Game.getGameState() == Game.GameState.WARNING_STATE) {
+            drawWarningScreen();
         }
     }
 
@@ -204,23 +208,46 @@ public class UI {
     }
 
     void drawEndLevelScreen() {
-        if (!Game.getPlayer().alive) {
-            drawMessage(0,Game.WND_HEIGHT/2,"You lost!", 96F);
+        if(game.currentLevel < 4) {
+            if (!Game.getPlayer().alive) {
+                drawMessage(0,Game.WND_HEIGHT/2,"You lost!", 96F);
+            }
+            else if (Game.getPlayer().wonMessageOn) {
+                drawMessage(0, Game.WND_HEIGHT / 3, "You won\nthis challenge!", 96F);
+            }
+
+            int x;
+            x = drawMessage(0,Game.WND_HEIGHT/3 + 200, "Continue", 40F);
+
+            if(endLvlCommand==0) {
+                drawMessage(x - 7*Tile.TILE_SIZE/10,Game.WND_HEIGHT/3 + 200, ">", 40F);
+            }
+            x = drawMessage(0,Game.WND_HEIGHT/3 + 280, "Save & Exit", 40F);
+            if(endLvlCommand==1) {
+                drawMessage(x - 7*Tile.TILE_SIZE/10,Game.WND_HEIGHT/3 + 280, ">", 40F);
+            }
         }
-        else if (Game.getPlayer().wonMessageOn) {
-            drawMessage(0, Game.WND_HEIGHT / 3, "You won\nthis challenge!", 96F);
+        else {
+            drawMessage(0, Game.WND_HEIGHT / 5, "Congratulations!\nYou beat the challenges!\nThe Elohims have given back to you \nand your people the gift\nof eternal life!", 40F);
+        }
+    }
+
+    private void drawWarningScreen() {
+        //g2.setFont(g2.getFont().deriveFont(Font.BOLD,4F));
+        String text = "Are you sure you want to start a new game?\nAll progress will be lost!";
+        int y = Game.WND_HEIGHT/4;
+        drawMessage(0, y, text, 36F);
+
+        int x = drawMessage(0,y+250,"Yes",30F);
+        if(warningCommand==0) {
+            drawMessage(x - 7*Tile.TILE_SIZE/10,y + 250, ">", 40F);
         }
 
-        int x;
-        x = drawMessage(0,Game.WND_HEIGHT/3 + 200, "Continue", 40F);
+        x = drawMessage(0,y+350,"No",30F);
+        if(warningCommand==1) {
+            drawMessage(x - 7*Tile.TILE_SIZE/10,y + 350, ">", 40F);
+        }
 
-        if(endLvlCommand==0) {
-            drawMessage(x - 7*Tile.TILE_SIZE/10,Game.WND_HEIGHT/3 + 200, ">", 40F);
-        }
-        x = drawMessage(0,Game.WND_HEIGHT/3 + 280, "Save & Exit", 40F);
-        if(endLvlCommand==1) {
-            drawMessage(x - 7*Tile.TILE_SIZE/10,Game.WND_HEIGHT/3 + 280, ">", 40F);
-        }
     }
 
     int drawMessage(int x, int y, String text, float size) {

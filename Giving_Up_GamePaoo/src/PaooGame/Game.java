@@ -11,6 +11,7 @@ import PaooGame.entity.Player;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,9 +41,9 @@ public class Game implements Runnable
     public AssetSetter assetSetter = new AssetSetter(this);
 
     // LEVEL LOGIC
-    private LevelMaker lvlMaker;
-    public int currentLevel=1;
-    private Level lvlInstance;
+    public LevelMaker lvlMaker;
+    public int currentLevel=3;
+    public Level lvlInstance;
 
     // MUSIC, SOUND EFFECTS AND USER INTERFACE
     Sound music = new Sound();
@@ -55,9 +56,13 @@ public class Game implements Runnable
         PAUSE_STATE,
         DIALOGUE_STATE,
         MAIN_MENU_STATE,
-        END_LEVEL_STATE;
+        END_LEVEL_STATE,
+        WARNING_STATE;
     }
     private static GameState gState;
+
+    // DATA BASE
+    private final Connection c;
 
     /// Sunt cateva tipuri de "complex buffer strategies", scopul fiind acela de a elimina fenomenul de
     /// flickering (palpaire) a ferestrei.
@@ -74,12 +79,13 @@ public class Game implements Runnable
     public Graphics g;
 
     // CONSTRUCTOR
-    public Game(String title)
+    public Game(String title, Connection c)
     {
         wnd = new GameWindow(title, WND_WIDTH, WND_HEIGHT);
         keyH = new KeyHandler(this);
         collissionChecker  = new CollisionChecker(this);
         p = Player.Instance(this,keyH);
+        this.c = c;
         runState = false;
     }
 
@@ -137,8 +143,8 @@ public class Game implements Runnable
         if(!runState)
         {
             runState = true;
-                /// Se construieste threadul avand ca parametru obiectul Game. De retinut faptul ca Game class
-                /// implementeaza interfata Runnable. Threadul creat va executa functia run() suprascrisa in clasa Game.
+            /// Se construieste threadul avand ca parametru obiectul Game. De retinut faptul ca Game class
+            /// implementeaza interfata Runnable. Threadul creat va executa functia run() suprascrisa in clasa Game.
             gameThread = new Thread(this);
             // THREAD EXECUTES run()
             gameThread.start();
@@ -159,24 +165,24 @@ public class Game implements Runnable
     {
         if(runState)
         {
-                /// Actualizare stare thread
+            /// Actualizare stare thread
             runState = false;
-                /// Metoda join() arunca exceptii motiv pentru care trebuie incadrata intr-un block try - catch.
+            /// Metoda join() arunca exceptii motiv pentru care trebuie incadrata intr-un block try - catch.
             try
             {
-                    /// Metoda join() pune un thread in asteptare panca cand un altul isi termina executie.
-                    /// Totusi, in situatia de fata efectul apelului este de oprire a threadului.
+                /// Metoda join() pune un thread in asteptare panca cand un altul isi termina executie.
+                /// Totusi, in situatia de fata efectul apelului este de oprire a threadului.
                 gameThread.join();
             }
             catch(InterruptedException ex)
             {
-                    /// In situatia in care apare o exceptie pe ecran vor fi afisate informatii utile pentru depanare.
+                /// In situatia in care apare o exceptie pe ecran vor fi afisate informatii utile pentru depanare.
                 ex.printStackTrace();
             }
         }
         else
         {
-                /// Thread-ul este oprit deja.
+            /// Thread-ul este oprit deja.
             return;
         }
     }
@@ -212,8 +218,13 @@ public class Game implements Runnable
 
             if(monsterCount==0) p.won=true;
         }
-        if ( gState == GameState.END_LEVEL_STATE) {
-            if(!updated) {lvlInstance = lvlMaker.update();updated = true;p.won=false;}
+        if ( gState == GameState.END_LEVEL_STATE || gState == GameState.MAIN_MENU_STATE) {
+            if(!updated) {
+                lvlInstance = lvlMaker.update();
+                //preSave[0]=currentLevel;
+                updated = true;
+                p.won=false;
+            }
         }
     }
 
@@ -227,7 +238,7 @@ public class Game implements Runnable
             // Se executa doar la primul apel al metodei Draw()
             try
             {
-                    /// Se construieste tripul buffer
+                /// Se construieste tripul buffer
                 wnd.GetCanvas().createBufferStrategy(3);
                 return;
             }
@@ -240,9 +251,9 @@ public class Game implements Runnable
         Graphics2D g2 = (Graphics2D) g;
 
         /// Se sterge ce era
-        g.clearRect(0, 0, wnd.GetWndWidth(), wnd.GetWndHeight());
+        g2.clearRect(0, 0, wnd.GetWndWidth(), wnd.GetWndHeight());
 
-        if(gState== GameState.MAIN_MENU_STATE  || gState == GameState.END_LEVEL_STATE) {
+        if(gState== GameState.MAIN_MENU_STATE  || gState == GameState.END_LEVEL_STATE || gState == GameState.WARNING_STATE) {
             ui.draw(g2);
         }
         else {
@@ -296,6 +307,7 @@ public class Game implements Runnable
 
         // EFFECTIVELY DRAWING AND CLEAN UP
         bs.show();
+        g2.dispose();
         g.dispose();
     }
 
@@ -309,6 +321,10 @@ public class Game implements Runnable
 
     public static void setGameState(GameState gs) {
         gState = gs;
+    }
+
+    public Connection getDBConn() {
+        return c;
     }
 
     public void playMusic(int i) {
@@ -326,4 +342,3 @@ public class Game implements Runnable
         se.play();
     }
 }
-

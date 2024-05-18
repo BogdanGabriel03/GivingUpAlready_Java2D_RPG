@@ -5,6 +5,7 @@ import PaooGame.Item.Spell_Chest;
 import PaooGame.Tiles.Tile;
 import PaooGame.entity.Entity;
 import PaooGame.entity.NPC_FinalBoss;
+import PaooGame.monster.Monster_Blight;
 import PaooGame.monster.Monster_Bloom;
 import PaooGame.monster.Monster_Crumble;
 
@@ -53,34 +54,34 @@ public class AssetSetter {
             game.monster.clear();
             switch(game.currentLevel) {
                 case 1:
-                game.monster.add(createAsset(2,29,12));
-                game.monster.add(createAsset(2,34,47));
-                game.monster.add(createAsset(2,28,32));
-                game.monster.add(createAsset(2,32,8));
+                //game.monster.add(createAsset(2,29,12));
+                //game.monster.add(createAsset(2,34,47));
+                //game.monster.add(createAsset(2,28,32));
+                //game.monster.add(createAsset(2,32,8));
                 game.monster.add(createAsset(2,20,9));
-                game.monster.add(createAsset(2,24,49));
+                //game.monster.add(createAsset(2,24,49));
                 break;
             case 2:
                 game.monster.add(createAsset(2,11,17));
-                game.monster.add(createAsset(2,34,56));
-                game.monster.add(createAsset(2,10,9));
-                game.monster.add(createAsset(2,19,44));
-                game.monster.add(createAsset(4,49,37));
-                game.monster.add(createAsset(4,23,32));
-                game.monster.add(createAsset(4,25,32));
-                game.monster.add(createAsset(4,44,7));
+                //game.monster.add(createAsset(2,34,56));
+                //game.monster.add(createAsset(2,10,9));
+                //game.monster.add(createAsset(2,19,44));
+                //game.monster.add(createAsset(4,49,37));
+                //game.monster.add(createAsset(4,23,32));
+                //game.monster.add(createAsset(4,25,32));
+                //game.monster.add(createAsset(4,44,7));
                 break;
             case 3:
-                game.monster.add(createAsset(2,22,58));
-                game.monster.add(createAsset(2,18,63));
-                game.monster.add(createAsset(4,60,57));
-                game.monster.add(createAsset(4,60,47));
-                game.monster.add(createAsset(4,30,18));
-                game.monster.add(createAsset(4,47,33));
-                game.monster.add(createAsset(4,17,24));
-                game.monster.add(createAsset(4,42,8));          //level3 type monster
-                game.monster.add(createAsset(4,20,8));          //level3 type monster
-                game.monster.add(createAsset(4,20,10));         //level3 type monster
+                //game.monster.add(createAsset(2,22,58));
+                //game.monster.add(createAsset(2,18,63));
+                //game.monster.add(createAsset(4,60,57));
+                //game.monster.add(createAsset(4,60,47));
+                //game.monster.add(createAsset(4,30,18));
+                //game.monster.add(createAsset(4,47,33));
+                //game.monster.add(createAsset(4,17,24));
+                //game.monster.add(createAsset(6,42,8));          //level3 type monster
+                game.monster.add(createAsset(6,20,8));          //level3 type monster
+                //game.monster.add(createAsset(6,20,10));         //level3 type monster
 
 
                 break;
@@ -100,7 +101,8 @@ public class AssetSetter {
             case 2 -> new Monster_Bloom(game);
             case 3 -> new Item_Chest(game);
             case 4 -> new Monster_Crumble(game);
-            default -> new Spell_Chest(game);
+            case 5 -> new Spell_Chest(game);
+            default -> new Monster_Blight(game);
         };
         entity.worldX = x * Tile.TILE_SIZE;
         entity.worldY = y * Tile.TILE_SIZE;

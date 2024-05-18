@@ -26,11 +26,13 @@ public class Assets
     public static BufferedImage[] tiles = new BufferedImage[7];
     public static BufferedImage[] monster_1 = new BufferedImage[4];
     public static BufferedImage[] monster_2 = new BufferedImage[6];
+    public static BufferedImage[] monster_3 = new BufferedImage[4];
     public static BufferedImage chest;
     public static BufferedImage bossNpc;
     public static BufferedImage[] fireSpell = new BufferedImage[5];
     public static BufferedImage[] stoneShield = new BufferedImage[3];
-    public static BufferedImage[] crystalBeam= new BufferedImage[4];
+    public static BufferedImage[] crystalBeamUD= new BufferedImage[2];
+    public static BufferedImage[] crystalBeamLR= new BufferedImage[2];
     public static BufferedImage[] spellButton = new BufferedImage[3];
 
 
@@ -113,10 +115,10 @@ public class Assets
         attackUp[2] = setup(sheet,2,5);
         attackUp[3] = setup(sheet,3,5);
 
-        crystalBeam[0] = setup(sheet,4,5);
-        crystalBeam[1] = setup(sheet,5,5);
-        crystalBeam[2] = setup(sheet,6,5);
-        crystalBeam[3] = setup(sheet,7,5);
+        crystalBeamLR[0] = setup(sheet,4,5);
+        crystalBeamLR[1] = setup(sheet,5,5);
+        crystalBeamUD[0] = setup(sheet,6,5);
+        crystalBeamUD[1] = setup(sheet,7,5);
 
         spellButton[0] = setup(sheet,8,5);
         spellButton[1] = setup(sheet,9,5);
@@ -126,6 +128,10 @@ public class Assets
         stoneShield[1] = setup(sheet,2,6);
         stoneShield[2] = setup(sheet,3,6);
 
+        monster_3[0] = setup(sheet,4,6);
+        monster_3[1] = setup(sheet,5,6);
+        monster_3[2] = setup(sheet,6,6);
+        monster_3[3] = monster_3[1];
     }
 
     private static BufferedImage setup(SpriteSheet sheet, int x, int y) {

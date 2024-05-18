@@ -3,29 +3,35 @@ package PaooGame.monster;
 import PaooGame.Game;
 import PaooGame.Graphics.Assets;
 import PaooGame.entity.Entity;
+import PaooGame.entity.Spell;
+import PaooGame.spells.CrystalBeam;
 
 import java.util.Random;
 
-public class Monster_Bloom extends Entity {
+public class Monster_Blight extends Entity {
     private int actionLockCounter;
-    public Monster_Bloom(Game game) {
+    private final Spell spell;
+    public Monster_Blight(Game game) {
         super(game);
-        type = 2;
-        name = "Bloom";             // Blue winged monsters, with the main body being an eye; everything they touch with it transforms into trees;
+        type = 6;
+        name = "Blight";             // Conglomerate of crystal eyes shooting shiny yet deadly beams of hardened light
         speed = 1;
-        maxHealth= 4;
+        maxHealth= 15;
         health = maxHealth;
         actionLockCounter=0;        // Monster will walk a direction for 2 sec then choose other direction to go in
         action = 1;                 // 0 - UP , 1 - LEFT, 2 - DOWN , 3 - RIGHT
 
-        barrier.x = 12;
-        barrier.y = 24;
-        barrier.width = 26;
-        barrier.height = 26;
+        barrier.x = 8;
+        barrier.y = 8;
+        barrier.width = 34;
+        barrier.height = 42;
 
         barrierInitialX = barrier.x;
         barrierInitialY = barrier.y;
-        img = Assets.monster_1[0];
+
+        img = Assets.monster_3[0];
+
+        spell = new CrystalBeam(game);
     }
 
     public void update() {
@@ -46,10 +52,10 @@ public class Monster_Bloom extends Entity {
         }
 
         switch (action) {
-            case 1: SetSprite(Assets.monster_1[counter/5]);break;               // UP
-            case 2: SetSprite(Assets.monster_1[counter/5]);break;               // LEFT
-            case 3: SetSprite(Assets.monster_1[counter/5]);break;               // DOWN
-            case 4: SetSprite(Assets.monster_1[counter/5]);break;               // RIGHT
+            case 1: SetSprite(Assets.monster_3[counter/7]);break;               // UP
+            case 2: SetSprite(Assets.monster_3[counter/7]);break;               // LEFT
+            case 3: SetSprite(Assets.monster_3[counter/7]);break;               // DOWN
+            case 4: SetSprite(Assets.monster_3[counter/7]);break;               // RIGHT
         }
 
         if(!collisionOn) {
@@ -62,7 +68,7 @@ public class Monster_Bloom extends Entity {
         }
 
         counter++;
-        if(counter==20) {counter=0;}
+        if(counter==28) { counter=0; }
 
         if (invincible) {
             hpBarOn = true;
@@ -75,24 +81,30 @@ public class Monster_Bloom extends Entity {
         }
     }
 
-    @Override
     public void setAction() {
         actionLockCounter++;
-        if(actionLockCounter >= 60) {
+        if(actionLockCounter >= 60 || collisionOn) {
             Random rand = new Random();
             switch(rand.nextInt(100)/25) {
-                case 0: action = 1;break;               // UP
-                case 1: action = 2;break;               // LEFT
-                case 2: action = 3;break;               // DOWN
-                case 3: action = 4;break;               // RIGHT
+                case 0: action = 1;break;
+                case 1: action = 2;break;
+                case 2: action = 3;break;
+                case 3: action = 4;break;
             }
             actionLockCounter=0;
         }
+        int i = new Random().nextInt(100)+1;
+        if(i>50 && !spell.alive) {
+            spell.set(worldX,worldY,action,true,this);
+            game.spellList.add(spell);
+        }
     }
+
     @Override
     public int getAction() {
         return action;
     }
+
     @Override
     public int getSpeed() {
         return speed;

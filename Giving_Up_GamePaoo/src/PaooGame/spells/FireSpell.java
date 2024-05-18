@@ -5,11 +5,9 @@ import PaooGame.Graphics.Assets;
 import PaooGame.entity.Spell;
 
 public class FireSpell extends Spell {
-    //Game game;
 
     public FireSpell(Game game) {
         super(game);
-        //this.game = game;
         name = "FireSpell";
         speed = 7;
         maxHealth = 60;
@@ -43,9 +41,6 @@ public class FireSpell extends Spell {
                 Game.getPlayer().damageMonster(monsterIdx,this.attack);
                 alive=false;
             }
-        }
-        else {
-            // what monster can shoot also fire
         }
     }
 }
